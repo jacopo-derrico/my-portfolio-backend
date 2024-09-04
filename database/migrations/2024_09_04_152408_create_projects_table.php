@@ -18,6 +18,8 @@ return new class extends Migration
             $table->date('date');
             $table->text('description');
             $table->string('cover_path');
+            $table->string('link');
+            $table->string('git-link');
             $table->timestamps();
         });
     }
