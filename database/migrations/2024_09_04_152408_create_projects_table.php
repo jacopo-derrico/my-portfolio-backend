@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('title')->unique();
             $table->string('slug');
-            $table->date('date');
+            $table->integer('date')->unsigned();
             $table->text('description');
             $table->string('cover_path');
-            $table->string('link');
-            $table->string('git-link');
+            $table->string('link')->nullable();
+            $table->string('git_link')->nullable();
             $table->timestamps();
         });
     }
