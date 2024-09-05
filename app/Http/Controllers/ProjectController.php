@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -23,7 +24,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        return view('projects.create');
     }
 
     /**
@@ -31,7 +32,22 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        //
+        // dd($request->all());
+        // dd($validated = $request->validated());
+        $validated = $request->validated();
+        // dd($validated);
+        $slug = Project::generateSlug($request->title);
+
+        $validated['slug'] = $slug;
+
+        if ($request->hasFile('cover_path')) {
+            $path = Storage::disk('public')->put('projects_cover', $request['cover_path']);
+            $validated['cover_path'] = $path;
+        };
+
+        $new_project = Project::create($validated);
+
+        return redirect()->route('projects.index');
     }
 
     /**
