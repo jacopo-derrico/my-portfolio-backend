@@ -47,7 +47,7 @@
                         </div>
                         <!-- cover_path -->
                         <div class="mt-4">
-                            <x-input-label for="cover_path" :value="__('Link')" />
+                            <x-input-label for="cover_path" :value="__('Cover image')" />
                             <x-text-input id="cover_path" class="block mt-1 w-full" type="file" accept="image/*,.gif" name="cover_path" autofocus/>
                             <x-input-error :messages="$errors->get('cover_path')" class="mt-2" />
                         </div>
