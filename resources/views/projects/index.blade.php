@@ -60,6 +60,11 @@
                                         {{ __('Delete') }}
                                     </x-secondary-button>
                                 </a>
+                                <a href="{{ route('projects.show', $item->id)}}">
+                                    <x-secondary-button>
+                                        {{ __('See') }}
+                                    </x-secondary-button>
+                                </a>
                             </td>
                         </tr>
                         @endforeach
