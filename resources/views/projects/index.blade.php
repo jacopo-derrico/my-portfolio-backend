@@ -18,11 +18,11 @@
                         <thead>
                           <tr>
                             <th class="text-left">ID</th>
-                            <th class="text-left">Description</th>
+                            <th class="text-left">Cover</th>
                             <th class="text-left ps-2">Title</th>
                             <th class="text-left">Slug</th>
                             <th class="text-left">Date</th>
-                            <th class="text-left">Cover</th>
+                            <th class="text-left">Description</th>
                             <th class="text-left ps-2">Links</th>
                             <th class="text-left">Actions</th>
                           </tr>
