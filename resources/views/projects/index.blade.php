@@ -55,16 +55,22 @@
                                         {{ __('Edit') }}
                                     </x-primary-button>
                                 </a>
-                                <a href="">
-                                    <x-secondary-button>
-                                        {{ __('Delete') }}
-                                    </x-secondary-button>
-                                </a>
                                 <a href="{{ route('projects.show', $item->id)}}">
                                     <x-secondary-button>
                                         {{ __('See') }}
                                     </x-secondary-button>
                                 </a>
+                                <form action="{{ route('projects.destroy', $item->id)}}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <x-danger-button 
+                                        type="submit" 
+                                        class="outline-pink-600"
+                                    >
+                                        {{ __('Delete') }}
+                                    </x-danger-button>
+                                </form>
+                                
                             </td>
                         </tr>
                         @endforeach
@@ -74,4 +80,17 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function openModal() {
+            document.querySelector("delete-modal").style.display = "block";
+        }
+        
+        window.onclick = function(event) {
+            if (event.target == document.querySelector("delete-modal")) {
+                document.querySelector("delete-modal").style.display = "none";
+            }
+        }
+        </script>
+        
 </x-app-layout>
