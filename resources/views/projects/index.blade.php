@@ -50,7 +50,7 @@
                                 {{ $item->git_link }}
                             </td>
                             <td class="max-w-[200px]">
-                                <a href="">
+                                <a href="{{ route('projects.edit', $item->id)}}">
                                     <x-primary-button>
                                         {{ __('Edit') }}
                                     </x-primary-button>
@@ -64,8 +64,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <x-danger-button 
-                                        type="submit" 
-                                        class="outline-pink-600"
+                                        type="submit"
                                     >
                                         {{ __('Delete') }}
                                     </x-danger-button>
