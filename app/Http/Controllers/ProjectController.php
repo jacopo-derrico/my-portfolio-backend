@@ -63,17 +63,32 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Project $project)
+    public function edit(string $id)
     {
-        //
+        $project = Project::findOrFail($id);
+
+        return view('projects.edit', compact('project'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProjectRequest $request, Project $project)
+    public function update(StoreProjectRequest $request, string $id)
     {
-        //
+        $validated = $request->validated();
+        dd($request->all());
+    
+        $project = Project::findOrFail($id);
+
+        if ($request->hasFile('cover_path')) {
+            $path = Storage::disk('public')->put('projects_cover', $request['cover_path']);
+            $validated['cover_path'] = $path;
+        } else {
+            $path = $project->cover_path;
+        }
+    
+        $project->update($validated);
+        return redirect()->route('projects.show', ['project' => $project->id])->with('success', 'Project updated successfully');
     }
 
     /**

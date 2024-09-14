@@ -3,17 +3,28 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Validation\Rule;
 class UpdateProjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
+    public function authorize(): array
     {
-        return false;
+        return [
+            'title' => [
+                'required',
+                'string',
+                Rule::unique('projects')
+            ],
+            'date' => ['required'],
+            'description' => ['required'],
+            'cover_path' => ['nullable', 'image|mimes:jpg,jpeg,png,gif|max:1024'],
+            'link' => ['nullable'],
+            'git_link' => ['nullable'],
+        ];
     }
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -21,8 +32,14 @@ class UpdateProjectRequest extends FormRequest
      */
     public function rules(): array
     {
+        dd("test");
         return [
-            //
+            'title' => 'required|string|unique:projects',
+            'date' => 'required',
+            'description' => 'required',
+            'cover_path' => ['nullable', 'image|mimes:jpg,jpeg,png,gif|max:1024'],
+            'link' => 'nullable',
+            'git_link' => 'nullable',
         ];
     }
 }
