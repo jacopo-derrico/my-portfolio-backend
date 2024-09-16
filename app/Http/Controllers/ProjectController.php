@@ -6,6 +6,7 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -82,8 +83,10 @@ class ProjectController extends Controller
         } else {
             $path = $project->cover_path;
         }
-
-        
+        // dd($validated);
+        // autogenerate the new slug from title
+        $slug = Project::generateSlug($request->title);
+        $validated['slug'] = $slug;
     
         $project->update($validated);
         return redirect()->route('projects.show', ['project' => $project->id])->with('success', 'Project updated successfully');
