@@ -32,10 +32,7 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        // dd($request->all());
-        // dd($validated = $request->validated());
         $validated = $request->validated();
-        // dd($validated);
         $slug = Project::generateSlug($request->title);
 
         $validated['slug'] = $slug;
@@ -73,10 +70,9 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreProjectRequest $request, string $id)
+    public function update(UpdateProjectRequest $request, string $id)
     {
         $validated = $request->validated();
-        dd($request->all());
     
         $project = Project::findOrFail($id);
 
@@ -86,6 +82,8 @@ class ProjectController extends Controller
         } else {
             $path = $project->cover_path;
         }
+
+        
     
         $project->update($validated);
         return redirect()->route('projects.show', ['project' => $project->id])->with('success', 'Project updated successfully');
