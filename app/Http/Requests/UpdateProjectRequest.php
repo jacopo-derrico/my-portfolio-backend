@@ -32,9 +32,8 @@ class UpdateProjectRequest extends FormRequest
      */
     public function rules(): array
     {
-        dd("test");
         return [
-            'title' => 'required|string|unique:projects',
+            'title' => 'required|string|unique:projects,title,'.$this->project, // the last part exclude the current record, $this->project returns the id of the record
             'date' => 'required',
             'description' => 'required',
             'cover_path' => ['nullable', 'image|mimes:jpg,jpeg,png,gif|max:1024'],
