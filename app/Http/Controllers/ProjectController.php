@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
+use App\Models\Technology;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -55,7 +56,9 @@ class ProjectController extends Controller
     {
         $project = Project::findOrFail($id);
 
-        return view('projects.show', compact('project'));
+        $technologies = Technology::all();
+
+        return view('projects.show', compact('project', 'technologies'));
     }
 
     /**
@@ -65,7 +68,9 @@ class ProjectController extends Controller
     {
         $project = Project::findOrFail($id);
 
-        return view('projects.edit', compact('project'));
+        $technologies = Technology::all();
+
+        return view('projects.edit', compact('project', 'technologies'));
     }
 
     /**
