@@ -63,6 +63,28 @@
                             <x-textarea-input id="description" class="block mt-1 w-full" type="textarea" row="20" name="description" autofocus text="{{ old('description') ?? $project->description }}" />
                             <x-input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
+
+                        {{-- edit technology tags --}}
+                        <div class="mt-4">
+                            <x-input-label for="technologies" :value="__('Technology')" />
+                            <p class="text-xs">Hold down Ctrl or CMD to selecte multiple tags</p>
+                            <select name="technologies[]" multiple class="w-full h-48 mt-1 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                
+                
+                              @foreach ($technologies as $technology)
+                              
+                                 @if ($errors->any())
+                                    <option value="{{ $technology->id }}"
+                                        {{ in_array($technology->id, old('technologies', [])) ? 'selected' : '' }}>{{ $technology->name }}</option>
+                                @else
+                                    <option value="{{ $technology->id }}"
+                                        {{ $project->technologies->contains($technology->id) ? 'selected' : '' }}>{{ $technology->name }}</option>
+                                @endif
+                                
+                              @endforeach
+                
+                            </select>
+                        </div>
                 
                         
                         <div class="flex items-center justify-end mt-4" type="submit">

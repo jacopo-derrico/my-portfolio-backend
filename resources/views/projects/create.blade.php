@@ -67,8 +67,7 @@
                 
                               @foreach ($technologies as $technology)
                               
-                                 <option value="{{ $technology->id }} {{ $technology->id == old('technology') ? 'selected' : '' }}"
-                                    class="rounded bg-[{{$technology->color}}]">{{ $technology->name }}</option>
+                                 <option value="{{ $technology->id }}">{{ $technology->name }}</option>
                 
                               @endforeach
                 
