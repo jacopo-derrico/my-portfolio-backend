@@ -22,6 +22,7 @@ class UpdateProjectRequest extends FormRequest
             'cover_path' => ['nullable', 'image|mimes:jpg,jpeg,png,gif|max:1024'],
             'link' => ['nullable'],
             'git_link' => ['nullable'],
+            'technologies' => ['exists:technologies,id'],
         ];
     }
     
@@ -39,6 +40,7 @@ class UpdateProjectRequest extends FormRequest
             'cover_path' => ['nullable', 'image|mimes:jpg,jpeg,png,gif|max:1024'],
             'link' => 'nullable',
             'git_link' => 'nullable',
+            'technologies' => 'exists:technologies,id',
         ];
     }
 }

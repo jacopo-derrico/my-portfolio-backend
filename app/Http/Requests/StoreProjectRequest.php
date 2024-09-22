@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class StoreProjectRequest extends FormRequest
 {
@@ -23,6 +24,7 @@ class StoreProjectRequest extends FormRequest
             'cover_path' => ['required', 'image|mimes:jpg,jpeg,png,gif|max:1024'],
             'link' => ['nullable'],
             'git_link' => ['nullable'],
+            'technologies' => ['exists:technologies,id'],
         ];
     }
 
@@ -40,6 +42,10 @@ class StoreProjectRequest extends FormRequest
             'cover_path' => 'required|image|mimes:jpg,jpeg,png,gif|max:1024',
             'link' => 'nullable',
             'git_link' => 'nullable',
+            'technologies' => [
+                'array',
+                'exists:technologies,id'
+            ],
         ];
     }
 }

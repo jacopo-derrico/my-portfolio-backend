@@ -20,13 +20,13 @@
                         <div class="flex w-full gap-3">
                             <!-- Title -->
                             <div class="w-full">
-                                <x-input-label for="title" :value="__('Title')" />
+                                <x-input-label for="title" :value="__('Title')" /><span class="text-sm text-red-600">*</span>
                                 <x-text-input id="title" class="block mt-1 w-full" type="text" name="title" required autofocus/>
                                 <x-input-error :messages="$errors->get('title')" class="mt-2" />
                             </div>
                             <!-- date -->
                             <div class="w-full">
-                                <x-input-label for="date" :value="__('Date')" />
+                                <x-input-label for="date" :value="__('Date')" /><span class="text-sm text-red-600">*</span>
                                 <x-text-input id="date" class="block mt-1 w-full" type="number" min="1994" max="2099" step="1" name="date" required autofocus/>
                                 <x-input-error :messages="$errors->get('date')" class="mt-2" />
                             </div>
@@ -47,15 +47,32 @@
                         </div>
                         <!-- cover_path -->
                         <div class="mt-4">
-                            <x-input-label for="cover_path" :value="__('Cover image')" />
+                            <x-input-label for="cover_path" :value="__('Cover image')" /><span class="text-sm text-red-600">*</span>
                             <x-text-input id="cover_path" class="block mt-1 w-full" type="file" accept="image/*,.gif" name="cover_path" autofocus/>
                             <x-input-error :messages="$errors->get('cover_path')" class="mt-2" />
                         </div>
                         <!-- description -->
                         <div class="mt-4">
-                            <x-input-label for="description" :value="__('Description')" />
+                            <x-input-label for="description" :value="__('Description')" /><span class="text-sm text-red-600">*</span>
                             <x-textarea-input id="description" class="block mt-1 w-full" type="textarea" row="20" name="description" autofocus/>
                             <x-input-error :messages="$errors->get('description')" class="mt-2" />
+                        </div>
+
+                        {{-- add technology tags --}}
+                        <div class="mt-4">
+                            <x-input-label for="technologies" :value="__('Technology')" />
+                            <p class="text-xs">Hold down Ctrl or CMD to selecte multiple tags</p>
+                            <select name="technologies[]" multiple class="w-full h-48 mt-1 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                
+                
+                              @foreach ($technologies as $technology)
+                              
+                                 <option value="{{ $technology->id }} {{ $technology->id == old('technology') ? 'selected' : '' }}"
+                                    class="rounded bg-[{{$technology->color}}]">{{ $technology->name }}</option>
+                
+                              @endforeach
+                
+                            </select>
                         </div>
                 
                         

@@ -7,7 +7,7 @@ use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use App\Models\Technology;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
@@ -26,7 +26,9 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('projects.create');
+        $technologies = Technology::all();
+
+        return view('projects.create', compact('technologies'));
     }
 
     /**
@@ -45,7 +47,18 @@ class ProjectController extends Controller
         };
 
         $new_project = Project::create($validated);
+        // dd($new_project->technologies);
+        // add technologies if they are selected
+        if ($request->has('technologies')) {
+            // $new_project->technologies()->attach($request->technologies);
 
+            $selected_technologies = $request->input('technologies');
+
+            Log::info('Selected technologies:', ['technologies' => $selected_technologies]);
+
+            $new_project->technologies()->attach($selected_technologies);
+        }
+        // dd($new_project->technologies);
         return redirect()->route('projects.index');
     }
 
@@ -79,7 +92,7 @@ class ProjectController extends Controller
     public function update(UpdateProjectRequest $request, string $id)
     {
         $validated = $request->validated();
-    
+
         $project = Project::findOrFail($id);
 
         if ($request->hasFile('cover_path')) {
@@ -92,8 +105,13 @@ class ProjectController extends Controller
         // autogenerate the new slug from title
         $slug = Project::generateSlug($request->title);
         $validated['slug'] = $slug;
-    
+
         $project->update($validated);
+
+        // update technologies if modified
+        if ($request->has('technologies')) {
+            $project->technologies()->sync($request->technologies);
+        }
         return redirect()->route('projects.show', ['project' => $project->id])->with('success', 'Project updated successfully');
     }
 
