@@ -23,6 +23,7 @@ class UpdateProjectRequest extends FormRequest
             'link' => ['nullable'],
             'git_link' => ['nullable'],
             'technologies' => ['exists:technologies,id'],
+            'categories' => ['exists:categories,id'],
         ];
     }
     
@@ -41,6 +42,7 @@ class UpdateProjectRequest extends FormRequest
             'link' => 'nullable',
             'git_link' => 'nullable',
             'technologies' => 'exists:technologies,id',
+            'categories' => 'exists:categories,id',
         ];
     }
 }

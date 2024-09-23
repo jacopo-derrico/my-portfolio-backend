@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Models\Category;
 use App\Models\Project;
 use App\Models\Technology;
 use Illuminate\Support\Facades\Storage;
@@ -28,7 +29,9 @@ class ProjectController extends Controller
     {
         $technologies = Technology::all();
 
-        return view('projects.create', compact('technologies'));
+        $categories = Category::all();
+
+        return view('projects.create', compact('technologies', 'categories'));
     }
 
     /**
@@ -47,18 +50,23 @@ class ProjectController extends Controller
         };
 
         $new_project = Project::create($validated);
-        // dd($new_project->technologies);
+        
         // add technologies if they are selected
         if ($request->has('technologies')) {
-            // $new_project->technologies()->attach($request->technologies);
-
+            
             $selected_technologies = $request->input('technologies');
-
-            Log::info('Selected technologies:', ['technologies' => $selected_technologies]);
 
             $new_project->technologies()->attach($selected_technologies);
         }
-        // dd($new_project->technologies);
+
+        // add categories if they are selected
+        if ($request->has('categories')) {
+            
+            $selected_categories = $request->input('categories');
+
+            $new_project->categories()->attach($selected_categories);
+        }
+        
         return redirect()->route('projects.index');
     }
 
@@ -71,7 +79,9 @@ class ProjectController extends Controller
 
         $technologies = Technology::all();
 
-        return view('projects.show', compact('project', 'technologies'));
+        $categories = Category::all();
+
+        return view('projects.show', compact('project', 'technologies', 'categories'));
     }
 
     /**
@@ -83,7 +93,9 @@ class ProjectController extends Controller
 
         $technologies = Technology::all();
 
-        return view('projects.edit', compact('project', 'technologies'));
+        $categories = Category::all();
+
+        return view('projects.edit', compact('project', 'technologies', 'categories'));
     }
 
     /**
@@ -101,7 +113,7 @@ class ProjectController extends Controller
         } else {
             $path = $project->cover_path;
         }
-        // dd($validated);
+        
         // autogenerate the new slug from title
         $slug = Project::generateSlug($request->title);
         $validated['slug'] = $slug;
@@ -112,7 +124,12 @@ class ProjectController extends Controller
         if ($request->has('technologies')) {
             $project->technologies()->sync($request->technologies);
         }
-        return redirect()->route('projects.show', ['project' => $project->id])->with('success', 'Project updated successfully');
+
+        // update categories if modified
+        if ($request->has('categories')) {
+            $project->categories()->sync($request->categories);
+        }
+        return redirect()->route('projects.show', ['project' => $project->id]);
     }
 
     /**

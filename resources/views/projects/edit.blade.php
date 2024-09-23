@@ -64,6 +64,28 @@
                             <x-input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 
+                        {{-- edit category tags --}}
+                        <div class="mt-4">
+                            <x-input-label for="categories" :value="__('Category')" />
+                            <p class="text-xs">Hold down Ctrl or CMD to selecte multiple tags</p>
+                            <select name="categories[]" multiple class="w-full h-48 mt-1 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                
+                
+                              @foreach ($categories as $category)
+                              
+                                 @if ($errors->any())
+                                    <option value="{{ $category->id }}"
+                                        {{ in_array($category->id, old('categories', [])) ? 'selected' : '' }}>{{ $category->name }}</option>
+                                @else
+                                    <option value="{{ $category->id }}"
+                                        {{ $project->categories->contains($category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
+                                @endif
+                                
+                              @endforeach
+                
+                            </select>
+                        </div>
+
                         {{-- edit technology tags --}}
                         <div class="mt-4">
                             <x-input-label for="technologies" :value="__('Technology')" />

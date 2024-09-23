@@ -25,6 +25,7 @@ class StoreProjectRequest extends FormRequest
             'link' => ['nullable'],
             'git_link' => ['nullable'],
             'technologies' => ['exists:technologies,id'],
+            'categories' => ['exists:categories,id'],
         ];
     }
 
@@ -45,6 +46,10 @@ class StoreProjectRequest extends FormRequest
             'technologies' => [
                 'array',
                 'exists:technologies,id'
+            ],
+            'categories' => [
+                'array',
+                'exists:categories,id'
             ],
         ];
     }
