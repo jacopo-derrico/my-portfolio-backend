@@ -71,6 +71,11 @@
                                 </form>
                                 
                             </td>
+                            <td>
+                                @foreach ($item->images as $image)
+                                    <img src="{{ Vite::asset('storage/app/public/' . $image->image_path) }}" alt="Project Image" class="w-9 h-auto object-cover">
+                                @endforeach
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
