@@ -26,6 +26,8 @@ class StoreProjectRequest extends FormRequest
             'git_link' => ['nullable'],
             'technologies' => ['exists:technologies,id'],
             'categories' => ['exists:categories,id'],
+            'image_path' => 'nullable|array',
+            'image_path.*' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
         ];
     }
 
@@ -51,6 +53,8 @@ class StoreProjectRequest extends FormRequest
                 'array',
                 'exists:categories,id'
             ],
+            'image_path' => 'nullable|array',
+            'image_path.*' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
         ];
     }
 }

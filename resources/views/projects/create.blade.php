@@ -90,6 +90,13 @@
                             </select>
                         </div>
                 
+                        <!-- add multiple images -->
+                        <div class="mt-4">
+                            <x-input-label for="image_path" :value="__('Add multiple images')" />
+                            <p class="text-xs">Hold down Ctrl or CMD to selecte multiple images</p>
+                            <x-text-input id="image_path" class="block mt-1 w-full" type="file" accept="image/*,.gif" name="image_path[]" multiple autofocus/>
+                            <x-input-error :messages="$errors->get('image_path')" class="mt-2" />
+                        </div>
                         
                         <div class="flex items-center justify-end mt-4" type="submit">
                             <x-primary-button class="ms-3">

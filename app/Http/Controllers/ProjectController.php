@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Category;
+use App\Models\Image;
 use App\Models\Project;
 use App\Models\Technology;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -17,7 +18,9 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::all();
+        $projects = Project::with('images')->get();
+
+        // $images = Image::all();
 
         return view('projects.index', compact('projects'));
     }
@@ -31,7 +34,9 @@ class ProjectController extends Controller
 
         $categories = Category::all();
 
-        return view('projects.create', compact('technologies', 'categories'));
+        $images = Image::all();
+
+        return view('projects.create', compact('technologies', 'categories', 'images'));
     }
 
     /**
@@ -65,6 +70,29 @@ class ProjectController extends Controller
             $selected_categories = $request->input('categories');
 
             $new_project->categories()->attach($selected_categories);
+        }
+
+        // add uploaded images
+        $uploadedImages = $request->file('image_path');
+
+        if ($request->hasFile('image_path')) {
+            $projectName = Str::slug($new_project->title, '-');
+            $projectId = $new_project->id;
+            $imagePaths = [];
+    
+            foreach ($uploadedImages as $index => $image) {
+                $originalFileName = $image->getClientOriginalName();
+                $newFilename = "{$projectId}-{$projectName}-{$index}-{$originalFileName}";
+
+                $path = Storage::disk('public')->putFileAs('projects_images', $image, $newFilename);
+
+                Image::create([
+                    'project_id' => $new_project->id,
+                    'image_path' => $path,
+                    'title' => null,
+                    'description' => null,
+                ]);
+            }
         }
         
         return redirect()->route('projects.index');
