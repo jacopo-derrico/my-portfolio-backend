@@ -46,17 +46,28 @@ class ProjectController extends Controller
         $slug = Project::generateSlug($request->title);
 
         $validated['slug'] = $slug;
+        // dd($validated);
 
-        if ($request->hasFile('cover_path')) {
-            $path = Storage::disk('public')->put('projects_cover', $request['cover_path']);
-            $validated['cover_path'] = $path;
-        };
+        // ---------- save cover image and rename it ---------
+        $projectName = Str::slug($request->title, '-');
+        // $projectId = $validated->id;
 
-        $new_project = Project::create($validated);
-        
+        $originalFileName = $request->file('cover_path')->getClientOriginalName();
+        $newFilename = "{$projectName}-cover-{$originalFileName}";
+
+        $path = Storage::disk('public')->putFileAs('projects_cover', $request->file('cover_path'), $newFilename);
+
+        $newPath = ['cover_path' => $path];
+        // ----------- end saving cover -----------
+
+        // $new_project = Project::create($validated);
+
+        $new_project = Project::create(array_merge($validated, $newPath));
+
+
         // add technologies if they are selected
         if ($request->has('technologies')) {
-            
+
             $selected_technologies = $request->input('technologies');
 
             $new_project->technologies()->attach($selected_technologies);
@@ -64,7 +75,7 @@ class ProjectController extends Controller
 
         // add categories if they are selected
         if ($request->has('categories')) {
-            
+
             $selected_categories = $request->input('categories');
 
             $new_project->categories()->attach($selected_categories);
@@ -77,7 +88,7 @@ class ProjectController extends Controller
             $projectName = Str::slug($new_project->title, '-');
             $projectId = $new_project->id;
             $imagePaths = [];
-    
+
             foreach ($uploadedImages as $index => $image) {
                 $originalFileName = $image->getClientOriginalName();
                 $newFilename = "{$projectId}-{$projectName}-{$index}-{$originalFileName}";
@@ -92,7 +103,7 @@ class ProjectController extends Controller
                 ]);
             }
         }
-        
+
         return redirect()->route('projects.index');
     }
 
@@ -135,7 +146,7 @@ class ProjectController extends Controller
         } else {
             $path = $project->cover_path;
         }
-        
+
         // autogenerate the new slug from title
         $slug = Project::generateSlug($request->title);
         $validated['slug'] = $slug;
@@ -159,7 +170,7 @@ class ProjectController extends Controller
             $projectName = Str::slug($project->title, '-');
             $projectId = $project->id;
             $imagePaths = [];
-    
+
             foreach ($uploadedImages as $index => $image) {
                 $originalFileName = $image->getClientOriginalName();
                 $newFilename = "{$projectId}-{$projectName}-{$index}-{$originalFileName}";
@@ -184,8 +195,8 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         $project->delete();
-        
-        Storage::disk('local')->delete('public/'.$project->cover_path);
+
+        Storage::disk('local')->delete('public/' . $project->cover_path);
 
         return redirect()->route('projects.index');
     }
