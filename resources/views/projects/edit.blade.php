@@ -64,54 +64,83 @@
                             <x-input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 
-                        {{-- edit category tags --}}
-                        <div class="mt-4">
-                            <x-input-label for="categories" :value="__('Category')" />
-                            <p class="text-xs">Hold down Ctrl or CMD to selecte multiple tags</p>
-                            <select name="categories[]" multiple class="w-full h-48 mt-1 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                
-                
-                              @foreach ($categories as $category)
-                              
-                                 @if ($errors->any())
-                                    <option value="{{ $category->id }}"
-                                        {{ in_array($category->id, old('categories', [])) ? 'selected' : '' }}>{{ $category->name }}</option>
-                                @else
-                                    <option value="{{ $category->id }}"
-                                        {{ $project->categories->contains($category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
-                                @endif
-                                
-                              @endforeach
-                
-                            </select>
+                        <div class="flex w-full justify-between gap-5">
+                            {{-- edit category tags --}}
+                            <div class="mt-4 w-1/2">
+                                <x-input-label for="categories" :value="__('Category')" />
+                                <p class="text-xs">Hold down Ctrl or CMD to selecte multiple tags</p>
+                                <select name="categories[]" multiple class="w-full h-48 mt-1 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    
+                    
+                                  @foreach ($categories as $category)
+                                  
+                                     @if ($errors->any())
+                                        <option value="{{ $category->id }}"
+                                            {{ in_array($category->id, old('categories', [])) ? 'selected' : '' }}>{{ $category->name }}</option>
+                                    @else
+                                        <option value="{{ $category->id }}"
+                                            {{ $project->categories->contains($category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
+                                    @endif
+                                    
+                                  @endforeach
+                    
+                                </select>
+                            </div>
+    
+                            {{-- edit technology tags --}}
+                            <div class="mt-4 w-1/2">
+                                <x-input-label for="technologies" :value="__('Technology')" />
+                                <p class="text-xs">Hold down Ctrl or CMD to selecte multiple tags</p>
+                                <select name="technologies[]" multiple class="w-full h-48 mt-1 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    
+                    
+                                  @foreach ($technologies as $technology)
+                                  
+                                     @if ($errors->any())
+                                        <option value="{{ $technology->id }}"
+                                            {{ in_array($technology->id, old('technologies', [])) ? 'selected' : '' }}>{{ $technology->name }}</option>
+                                    @else
+                                        <option value="{{ $technology->id }}"
+                                            {{ $project->technologies->contains($technology->id) ? 'selected' : '' }}>{{ $technology->name }}</option>
+                                    @endif
+                                    
+                                  @endforeach
+                    
+                                </select>
+                            </div>
                         </div>
 
-                        {{-- edit technology tags --}}
+
+                        <!-- add multiple images -->
                         <div class="mt-4">
-                            <x-input-label for="technologies" :value="__('Technology')" />
-                            <p class="text-xs">Hold down Ctrl or CMD to selecte multiple tags</p>
-                            <select name="technologies[]" multiple class="w-full h-48 mt-1 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                
-                
-                              @foreach ($technologies as $technology)
-                              
-                                 @if ($errors->any())
-                                    <option value="{{ $technology->id }}"
-                                        {{ in_array($technology->id, old('technologies', [])) ? 'selected' : '' }}>{{ $technology->name }}</option>
-                                @else
-                                    <option value="{{ $technology->id }}"
-                                        {{ $project->technologies->contains($technology->id) ? 'selected' : '' }}>{{ $technology->name }}</option>
-                                @endif
-                                
-                              @endforeach
-                
-                            </select>
+                            <x-input-label for="image_path" :value="__('Add multiple images')" />
+                            <p class="text-xs">Hold down Ctrl or CMD to selecte multiple images</p>
+                            <x-text-input id="image_path" class="block mt-1 w-full" type="file" accept="image/*,.gif" name="image_path[]" multiple autofocus/>
+                            <x-input-error :messages="$errors->get('image_path')" class="mt-2" />
                         </div>
+                        <div class="mt-4">
+                            <h6 class="text-sm">Images already uploaded</h6>
+                            <div class="w-full flex gap-6">
+                                @foreach ($project->images as $image)
+                                    <img src="{{ Vite::asset('storage/app/public/' . $image->image_path) }}" alt="Project Image" class="w-1/6 h-auto object-cover border border-gray-100 rounded-xl p-2">
+                                @endforeach
+                            </div>
+                        </div>
+
+                        @if (session()->has('new_images'))
+                            <h6 class="text-sm mt-4">New Images</h6>
+                            <div class="w-full flex gap-6">
+                                @foreach (session('new_images') as $newImage)
+                                    <img src="{{ Vite::asset('storage/app/public/' . $newImage) }}" alt="New Project Image" class="w-1/6 h-auto object-cover border border-gray-100 rounded-xl p-2">
+                                @endforeach
+                            </div>
+                            <div id="imagePreview"></div>
+                        @endif
                 
                         
                         <div class="flex items-center justify-end mt-4" type="submit">
                             <x-primary-button class="ms-3">
-                                {{ __('Update project') }}
+                                {{ __('Save edits to project') }}
                             </x-primary-button>
                         </div>
                     </form>
@@ -130,5 +159,16 @@
                 }
             });
         });
+
+        function previewImage(event) {
+            var input = event.target;
+            var reader = new FileReader();
+            reader.onload = function(){
+                var img = document.getElementById('imagePreview');
+                img.src = reader.result;
+                img.style.display = 'block';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
     </script>
 </x-app-layout>

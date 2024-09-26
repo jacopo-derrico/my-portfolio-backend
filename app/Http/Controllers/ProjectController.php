@@ -111,7 +111,7 @@ class ProjectController extends Controller
      */
     public function edit(string $id)
     {
-        $project = Project::findOrFail($id);
+        $project = Project::with(['images', 'technologies', 'categories'])->findOrFail($id);
 
         $technologies = Technology::all();
 
@@ -151,6 +151,30 @@ class ProjectController extends Controller
         if ($request->has('categories')) {
             $project->categories()->sync($request->categories);
         }
+
+        // add uploaded images
+        $uploadedImages = $request->file('image_path');
+
+        if ($request->hasFile('image_path')) {
+            $projectName = Str::slug($project->title, '-');
+            $projectId = $project->id;
+            $imagePaths = [];
+    
+            foreach ($uploadedImages as $index => $image) {
+                $originalFileName = $image->getClientOriginalName();
+                $newFilename = "{$projectId}-{$projectName}-{$index}-{$originalFileName}";
+                // rename files
+                $path = Storage::disk('public')->putFileAs('projects_images', $image, $newFilename);
+                // create record based on info
+                Image::create([
+                    'project_id' => $project->id,
+                    'image_path' => $path,
+                    'title' => null,
+                    'description' => null,
+                ]);
+            }
+        }
+
         return redirect()->route('projects.show', ['project' => $project->id]);
     }
 
