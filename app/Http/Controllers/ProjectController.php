@@ -20,8 +20,6 @@ class ProjectController extends Controller
     {
         $projects = Project::with('images')->get();
 
-        // $images = Image::all();
-
         return view('projects.index', compact('projects'));
     }
 
@@ -83,9 +81,9 @@ class ProjectController extends Controller
             foreach ($uploadedImages as $index => $image) {
                 $originalFileName = $image->getClientOriginalName();
                 $newFilename = "{$projectId}-{$projectName}-{$index}-{$originalFileName}";
-
+                // rename files
                 $path = Storage::disk('public')->putFileAs('projects_images', $image, $newFilename);
-
+                // create record based on info
                 Image::create([
                     'project_id' => $new_project->id,
                     'image_path' => $path,
@@ -103,13 +101,9 @@ class ProjectController extends Controller
      */
     public function show(string $id)
     {
-        $project = Project::findOrFail($id);
+        $project = Project::with(['images', 'technologies', 'categories'])->findOrFail($id);
 
-        $technologies = Technology::all();
-
-        $categories = Category::all();
-
-        return view('projects.show', compact('project', 'technologies', 'categories'));
+        return view('projects.show', compact('project'));
     }
 
     /**
