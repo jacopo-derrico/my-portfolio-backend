@@ -49,8 +49,35 @@
                         <!-- description -->
                         <div class="mt-4">
                             <div class="w-full">
-                                <h6 class="text-sm">GitHub link</h6>
+                                <h6 class="text-sm">Description</h6>
                                 <p class="text-md font-bold">{{ $project->description ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <!-- categories -->
+                        <div class="mt-4">
+                            <h6 class="text-sm">Categories</h6>
+                            <div class="w-full flex gap-3">
+                                @foreach ($project->categories as $cat)
+                                    <span class="rounded-3xl px-2" style="background-color: {{$cat->color}};">{{$cat->name}}</span>
+                                @endforeach
+                            </div>
+                        </div>
+                        <!-- technologies -->
+                        <div class="mt-4">
+                            <h6 class="text-sm">Technologies</h6>
+                            <div class="w-full flex gap-3">
+                                @foreach ($project->technologies as $tech)
+                                    <span class="rounded-3xl px-2" style="background-color: {{$tech->color}};">{{$tech->name}}</span>
+                                @endforeach
+                            </div>
+                        </div>
+                        <!-- all images -->
+                        <div class="mt-4">
+                            <h6 class="text-sm">Images</h6>
+                            <div class="w-full flex ">
+                                @foreach ($project->images as $image)
+                                    <img src="{{ Vite::asset('storage/app/public/' . $image->image_path) }}" alt="Project Image" class="w-1/3 h-auto object-cover">
+                                @endforeach
                             </div>
                         </div>
                     </div>
