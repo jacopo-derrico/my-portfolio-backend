@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Image;
 use App\Models\Project;
 use App\Models\Technology;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -46,11 +47,9 @@ class ProjectController extends Controller
         $slug = Project::generateSlug($request->title);
 
         $validated['slug'] = $slug;
-        // dd($validated);
 
         // ---------- save cover image and rename it ---------
         $projectName = Str::slug($request->title, '-');
-        // $projectId = $validated->id;
 
         $originalFileName = $request->file('cover_path')->getClientOriginalName();
         $newFilename = "{$projectName}-cover-{$originalFileName}";
@@ -59,8 +58,6 @@ class ProjectController extends Controller
 
         $newPath = ['cover_path' => $path];
         // ----------- end saving cover -----------
-
-        // $new_project = Project::create($validated);
 
         $new_project = Project::create(array_merge($validated, $newPath));
 
@@ -194,9 +191,16 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        $images = $project->images()->get();
+        
         $project->delete();
 
+        // delete cover image from disk
         Storage::disk('local')->delete('public/' . $project->cover_path);
+        // delete images connected to this project from disk
+        foreach ($images as $image) {
+            Storage::disk('local')->delete('public/' . $image->image_path);
+        }
 
         return redirect()->route('projects.index');
     }
