@@ -13,7 +13,8 @@ class ProjectController extends Controller
 
         return response()->json([
             'success' => true,
-            'projects' => $projects
+            'baseUrl' => config('app.url'),
+            'projects' => $projects,
         ]);
     }
 }
